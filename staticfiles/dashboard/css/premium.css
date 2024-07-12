@@ -1,0 +1,11 @@
+.dynamic-size-field {
+    margin-bottom: 20px;
+   }
+.first-size {
+    margin-bottom: 20px;
+}
+.delete a{
+    position: absolute;
+    right: 9px;
+    bottom: 30px;
+}

@@ -1,0 +1,70 @@
+<!-- findNearDealersResult.html -->
+{% extends 'Frontpage/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .dlrs-cnt {
+        min-height: 60vh;
+    }
+</style>
+
+
+<section class=" d-flex flex-column align-items-center row-gap-5">
+    <div class="dlrs-cnt">
+        <div class="d-flex flex-column row-gap-5">
+            <div class="text-center py-sm-5">
+                <h2 class="title-1">Near Dealers in {{ state }} - {{ district }}</h2>
+            </div>
+
+            <div class="intro-y overflow-auto lg:overflow-visible mt-8 sm:mt-0">
+                {% if dealers %}
+                    <table class="table table-report sm:mt-2">
+                        <thead>
+                            <tr>
+                                <th class="text-center whitespace-nowrap">SL NO</th>
+                                <th class="text-center whitespace-nowrap">NAME</th>
+                                <th class="text-center whitespace-nowrap">EMAIL</th>
+                                <th class="text-center whitespace-nowrap">NUMBER</th>
+                                <th class="text-center whitespace-nowrap">DISTRICT</th>
+                                <th class="text-center whitespace-nowrap">STATE</th>
+    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dealer in dealers %}
+                                <tr class="intro-x">
+                                    <td class="text-center whitespace-nowrap">{{ forloop.counter }}</td>
+                                    <td class="text-center whitespace-nowrap">{{ dealer.Name }}</td>
+                                    <td class="text-center whitespace-nowrap">{{ dealer.Email }}</td>
+                                    <td class="text-center whitespace-nowrap">{{ dealer.Contact_number }}</td>
+                                    <td class="text-center whitespace-nowrap">{{ dealer.District }}</td>
+                                    <td class="text-center whitespace-nowrap">{{ dealer.State }}</td>
+    
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                <div class="intro-y col-span-12 overflow-auto 2xl:overflow-visible mt-3">
+                    <table class="table table-report -mt-2">
+                        <tbody>
+                            <tr class="intro-x width"> 
+                                <td class=" width" style="width:100%;">
+                                    <i data-lucide="hard-drive" style="width:60px; height:60px; margin-left: auto; margin-right: auto; display: block; padding: 10px; border-radius: 50%;
+                                        background: #e8e4e4;" class="w-4 h-4 mr-2 text-primary">  
+                                    </i>
+                                <div style="text-align: center;">No data available!</div>
+                                </td>   
+                            </tr>    
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

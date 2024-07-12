@@ -1,0 +1,82 @@
+{% extends 'Frontpage/base.html' %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{%static 'style/product.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <section class="inner-contents">
+        <div class=" position-relative">
+            <div class="banner-img ">
+                <img class="banner-product" src="{% static 'assets/images/330x1496.webp' %}" alt="">
+                <img class="banner-productImg" src="{% static 'assets/images/476x300.webp' %}" alt="">
+            </div>
+            <div class="innerpage-cnt text-center m-b-70">
+                <h5 class="title-sub text-black">PETRA STEEL DOORS</h5>
+                <h2 class="title-1">Products</h2>
+            </div>
+        </div>
+    </section>
+
+
+
+    <div class="producSlidermain">
+        <h1 class="text-black text-center mb-5">Premium Doors</h1>
+        <div class="mySwiperprosection">
+
+            <div class="swiper-wrapper">
+                {% for door in premium %}
+                <a class="swiper-slide" href="{{door.get_url}}">
+                    <h2 class="cardDcnt animate__animated animate__fadeInUp ">{{door.Name}}</h2>
+                    <img src="{{door.Image.url}}" alt="">
+                </a>
+                {% endfor %}
+            </div>
+            
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+
+
+    <div class="producSlidermain">
+        <h1 class="text-black text-center mb-5">Single Doors</h1>
+        <div class="mySwiperprosection">
+            <div class="swiper-wrapper">
+                {% for door in single %}
+                <a class="swiper-slide" href="{{door.get_url}}">
+                    <h2 class="cardDcnt animate__animated animate__fadeInUp ">{{door.Name}}</h2>
+                    <img src="{{door.Image.url}}" alt="">
+                </a>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+
+
+
+    <div class="Ddoorprosection-main">
+        <div class="Ddoorprosection">
+            <h1 class="text-black text-center mb-5">Double Doors</h1>
+            <div class="mySwiperprosection">
+                <div class="swiper-wrapper">
+                    {% for door in double %}
+                    <a class="swiper-slide" href="{{door.get_url}}">
+                        <h2 class="cardDcnt animate__animated animate__fadeInUp ">{{door.Name}}</h2>
+                        <img src="{{door.Image.url}}" alt="">
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}

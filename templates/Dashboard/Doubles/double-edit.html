@@ -1,0 +1,167 @@
+{% extends 'Dashboard/base.html' %}
+{% load static %}
+
+{% block page %} 
+    <li class="breadcrumb-item active" aria-current="page">Edit Double</li>
+{% endblock page %}
+
+{% block content %}
+
+<div class="content">
+
+    <!-- BEGIN: Notification -->
+    {% if messages %}
+    {% for message in messages %}
+        <div class="intro-y col-span-11 alert alert-{{ message.tags }} alert-dismissible show flex items-center mb-6 mt-5 text-white" role="alert">
+            <span><i data-lucide="info" class="w-4 h-4 mr-2"></i></span>
+            <span>{{ message }}</span>
+            <button type="button" class="btn-close text-white" data-tw-dismiss="alert" aria-label="Close"> <i data-lucide="x" class="w-4 h-4"></i> </button>
+        </div>
+    {% endfor %}
+    {% endif %}
+    <!-- BEGIN: Notification -->
+
+    <div class="intro-y box py-10 sm:py-10 mt-5">
+
+        <h2 class="text-primary text-center font-medium" style=" font-size: 30px;">Edit Double Door</h2>
+        
+        <div class="px-3 sm:px-10 mt-10 pt-10 border-t border-slate-200/60 dark:border-darkmode-400">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="grid grid-cols-12 gap-4 gap-y-5 mt-5"> 
+                    <div class="intro-y col-span-12 sm:col-span-6">
+                        <label for="input-wizard-2" class="form-label">Door Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ double.Name }}" required>
+                    </div>
+
+                    <div class="intro-y col-span-12 sm:col-span-6">
+                        <label for="input-wizard-2" class="form-label">Image 1</label>
+                        <input name="image" type="file" class="form-control file" accept=".png, .jpg, .jpeg">
+                        <small class="form-text text-muted">Please select images of size 500x300 pixels.</small>
+                        {% if double.Image %}
+                            <img src="{{ double.Image.url }}" alt="Current Image" style="max-width: 200px; margin-top: 10px;" data-action="zoom">
+                        {% endif %}
+                    </div>
+                    <div class="intro-y col-span-12 sm:col-span-6">
+                        <label for="input-wizard-2" class="form-label">Image 2</label>
+                        <input name="image2" type="file" class="form-control file" accept=".png, .jpg, .jpeg">
+                        <small class="form-text text-muted">Please select images of size 500x300 pixels.</small>
+                        {% if double.Image2 %}
+                            <img src="{{ double.Image2.url }}" alt="Current Image" style="max-width: 200px; margin-top: 10px;" data-action="zoom">
+                        {% endif %}
+                    </div>
+                    <div class="intro-y col-span-12 sm:col-span-6">
+                        <label for="input-wizard-2" class="form-label">Image 3</label>
+                        <input name="image3" type="file" class="form-control file" accept=".png, .jpg, .jpeg">
+                        <small class="form-text text-muted">Please select images of size 500x300 pixels.</small>
+                        {% if double.Image3 %}
+                            <img src="{{ double.Image3.url }}" alt="Current Image" style="max-width: 200px; margin-top: 10px;" data-action="zoom">
+                        {% endif %}
+                    </div>
+                    <div class="intro-y col-span-12 sm:col-span-6">
+                        <label for="input-wizard-2" class="form-label">Description</label>
+                        <textarea name="description" rows="10" cols="5" class="form-control" required>{{ double.Description }}</textarea>
+                    </div> <br>
+
+                    <div class="intro-y col-span-12 sm:col-span-6" id="size-fields-container">
+                        <h3>Door Sizes</h3>
+                        {% if not double.double_sizes.all %}
+                            <div class="intro-y col-span-12 sm:col-span-6">
+                                <input type="text" name="sizes" class="form-control first-size">
+                            </div>
+                        {% else %}
+                            {% for size in double.double_sizes.all %}
+                                <div class="intro-y col-span-12 sm:col-span-12">
+                                    <div class="intro-y col-span-12 sm:col-span-12">
+                                        <div class="flex items-center delete">
+                                            <input type="text" name="sizes" class="form-control first-size" value="{{ size.size }}" style="flex: 1;">
+                                            <a onclick="delete_doubleSize('{{size.id}}')" class="flex items-center text-danger ml-2 delete-icon" style=" position: absolute;right: 9px;bottom: 30px;" href="javascript:;" data-tw-toggle="modal" data-tw-target="#delete-modal"> 
+                                                <i data-lucide="trash" class="w-4 h-4"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Add Size Button -->
+                    <div class="intro-y col-span-12 sm:col-span-12">
+                        <button type="button" class="btn btn-primary" id="add-size-btn">Add Size</button>
+                    </div>
+
+                    <div class="intro-y col-span-12 flex items-center justify-center sm:justify-end mt-5">
+                        <button class="btn btn-primary w-24 ml-2" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<!-- BEGIN: Delete Confirmation Modal -->
+<div id="delete-modal" class="modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="deleteDoubleSizeForm" action="{% url 'delete-doubleSize' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="doubleSize_id" id="doubleSize_id">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="p-5 text-center">
+                        <i data-lucide="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                        <div class="text-3xl mt-5">Are you sure?</div>
+                        <div class="text-slate-500 mt-2">Do you really want to delete these records? <br>This process cannot be undone.</div>
+                    </div>
+                    <div class="px-5 pb-8 text-center">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
+                        <button type="submit" class="btn btn-danger w-24">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- END: Delete Confirmation Modal -->
+
+<script>
+    document.getElementById('add-size-btn').addEventListener('click', function() {
+        const container = document.getElementById('size-fields-container');
+        if (container.children.length === 0) {
+            const initialField = document.createElement('div');
+            initialField.className = 'intro-y col-span-12 sm:col-span-12';
+            initialField.innerHTML = `
+                <input type="text" name="sizes" class="form-control" >
+                <div class="flex justify-center items-center">
+                    <a onclick="delete_doubleSize('{{size.id}}')" class="flex items-center text-danger" href="javascript:;" data-tw-toggle="modal" data-tw-target="#delete-modal"> 
+                        <i data-lucide="trash" class="w-4 h-4 mr-1"></i>
+                    </a>
+                </div>
+            `;
+            container.appendChild(initialField);
+        } else {
+            const newField = document.createElement('div');
+            newField.className = 'intro-y col-span-12 sm:col-span-12';
+            newField.innerHTML = `
+                <input type="text" name="sizes" class="form-control" >
+                <div class="flex justify-center items-center">
+                    <a onclick="delete_doubleSize('{{size.id}}')" class="flex items-center text-danger" href="javascript:;" data-tw-toggle="modal" data-tw-target="#delete-modal"> 
+                        <i data-lucide="trash" class="w-4 h-4 mr-1"></i>
+                    </a>
+                </div>
+            `;
+            container.appendChild(newField);
+        }
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+    function delete_doubleSize(doubleSize_id){
+        $('#doubleSize_id').val(doubleSize_id);
+        $('#deleteDoubleSizeForm').attr('action', "{% url 'delete-doubleSize' %}");
+    }
+</script>
+
+{% endblock content %}

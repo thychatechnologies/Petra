@@ -1,0 +1,146 @@
+{% extends 'Dashboard/base.html' %}
+{% load static %}
+
+{% block page %} 
+    <li class="breadcrumb-item active" aria-current="page">Manage Testimonials</li>
+{% endblock page %}
+
+{% block content %}
+
+<div class="content">
+
+    <!-- BEGIN: Notification -->
+    {% if messages %}
+    {% for message in messages %}
+        <div class="intro-y col-span-11 alert alert-{{ message.tags }} alert-dismissible show flex items-center mb-6 mt-5 text-white" role="alert">
+            <span><i data-lucide="info" class="w-4 h-4 mr-2"></i></span>
+            <span>{{ message }}</span>
+            <button type="button" class="btn-close text-white" data-tw-dismiss="alert" aria-label="Close"> <i data-lucide="x" class="w-4 h-4"></i> </button>
+        </div>
+    {% endfor %}
+    {% endif %}
+    <!-- END: Notification -->
+
+    <h2 class="text-primary text-center font-medium mt-10" style=" font-size: 30px;">Manage Testimonials</h2>
+    <!-- BEGIN: Weekly Top Products -->
+    <div class="col-span-12 mt-6 border-t border-dark pt-5">
+        <div class="intro-y block sm:flex items-center h-10">
+            <div class="flex items-center sm:ml-auto mt-3 sm:mt-0">
+                <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#add-image-modal">
+                    <button class="btn btn-primary ml-3">Add Videos</button>
+                </a>
+            </div>
+        </div>
+        <div >
+            <div class="iframe-container">
+                {% for link in links %}
+                    <div class="iframe-wrapper">
+                        <iframe src="{{link.Link}}/embed/" width="320" height="495" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                        <a onclick="delete_testimonials('{{link.id}}')" href="javascript:;" data-tw-toggle="modal" data-tw-target="#delete-modal">
+                            <div title="Remove this image?" class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> 
+                                <i data-lucide="x" class="w-4 h-4"></i> 
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- END: Weekly Top Products -->
+</div>
+
+<!-- BEGIN: Delete Confirmation Modal -->
+<div id="delete-modal" class="modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="{% url 'delete-testimonials' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="testimonial_id" id="testimonial_id">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="p-5 text-center">
+                        <i data-lucide="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                        <div class="text-3xl mt-5">Are you sure?</div>
+                        <div class="text-slate-500 mt-2">Do you really want to delete these records? <br>This process cannot be undone.</div>
+                    </div>
+                    <div class="px-5 pb-8 text-center">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
+                        <button type="submit" class="btn btn-danger w-24">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- END: Delete Confirmation Modal -->
+
+<!-- Add Image Modal -->
+<div id="add-image-modal" class="modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content"> 
+            <!-- BEGIN: Modal Header -->
+            <div class="modal-header">
+                <h2 class="font-medium text-base mr-auto">Add Videos To Testimonials</h2>
+            </div>
+            <!-- END: Modal Header --> 
+            <form action="{% url 'add-testimonials' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- BEGIN: Modal Body -->
+                <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                    <div class="col-span-12 sm:col-span-12"> 
+                        <label for="modal-form-1" class="form-label">Paste Video Link</label> 
+                        <input name="link" id="modal-form-1" type="input" class="form-control" required> 
+                    </div>
+                </div> 
+                <!-- END: Modal Body --> 
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer"> 
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button> 
+                    <button type="submit" class="btn btn-primary w-20">Submit</button> 
+                </div> 
+                <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Add image Modal -->
+
+<style>
+    /* Add this to your CSS file or within a <style> tag in base.html */
+.iframe-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 35px 47px;
+    gap: 23px;
+    
+}
+
+.iframe-wrapper {
+    position: relative;
+    width: 320px;
+    height: 495px;
+}
+
+.tooltip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    background-color: #dc3545; /* Bootstrap's danger color */
+    color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    cursor: pointer;
+}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+    function delete_testimonials(testimonial_id){
+        $('#testimonial_id').val(testimonial_id)
+    }
+</script>
+
+{% endblock content %}
